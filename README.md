@@ -8,6 +8,11 @@ https://wordpress.org/plugins/wp-rest-api-authentication/
 or something related with Bearer Token
 
 
-### Python requirements
+### Python install
 
-pip install -r requirements.txt
+```
+python -m venv .venv
+source .venv/bin/source
+pip install . # or -e for development
+```
+
