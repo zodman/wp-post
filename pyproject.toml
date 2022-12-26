@@ -1,0 +1,18 @@
+[project]
+name = "wpcli"
+version = "0.0.1"
+authors = [
+  { name="Andres Vargas", email="zodman@gmail.com" },
+]
+description = "A small app for wordpress automation"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/zodman/wpcli"
+"Bug Tracker" = "https://github.com/zodman/wpcli/issues"

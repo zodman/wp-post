@@ -2,7 +2,7 @@ import click
 import requests
 from slugify import slugify
 from rich import print
-from conf import URL_BASE, headers
+from .conf import URL_BASE, headers
 
 
 def _render(entry):
@@ -10,39 +10,38 @@ def _render(entry):
 
 
 @click.group()
-def tag():
+def category():
     pass
 
 
-@tag.command()
-@click.argument("tag_id")
+@category.command()
+@click.argument("category_id")
 @click.argument("name")
 @click.argument("slug")
-def edit(tag_id, name, slug):
-    url = f"{URL_BASE}wp/v2/tags/{tag_id}"
-    data = {'name': name, 'slug': slug, 'id': tag_id}
+def edit(category_id, name, slug):
+    url = f"{URL_BASE}wp/v2/categories/{category_id}"
+    data = {'name': name, 'slug': slug, 'id': category_id}
     response = requests.post(url, data=data, headers=headers)
 
     data = response.json()
     _render(data)
 
 
-@tag.command()
+@category.command()
 @click.argument("name")
 def create(name):
 
-    url = f"{URL_BASE}wp/v2/tags"
+    url = f"{URL_BASE}wp/v2/categories"
     data = {'name': name, 'slug': slugify(name)}
     response = requests.post(url, data=data, headers=headers)
-
     data = response.json()
-    for entry in data:
-        _render(entry)
+    print(data)
+    _render(data)
 
 
-@tag.command()
+@category.command()
 def list():
-    url = f"{URL_BASE}wp/v2/tags"
+    url = f"{URL_BASE}wp/v2/categories"
     response = requests.get(url, headers=headers)
     data = response.json()
     for entry in data:
@@ -50,4 +49,4 @@ def list():
 
 
 if __name__ == "__main__":
-    tag()
+    category()

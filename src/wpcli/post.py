@@ -1,11 +1,12 @@
 import click
 import requests
 from rich import print
-from conf import URL_BASE, headers
 import jinja2
 from jinja2 import Environment, select_autoescape
-from plugins import mal
 from slugify import slugify
+from .conf import URL_BASE, headers
+from .plugins import mal
+
 
 env = Environment(loader=jinja2.FileSystemLoader("."),
                   autoescape=select_autoescape())
