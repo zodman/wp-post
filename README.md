@@ -10,4 +10,4 @@ or something related with Bearer Token
 
 ### Python requirements
 
-pip install -r requirements.ini
+pip install -r requirements.txt

@@ -3,6 +3,7 @@ import click
 from jinja2 import Environment, select_autoescape
 import jinja2
 from conf import URL_BASE, AUTH_BASIC
+import plugins import mal
 
 env = Environment(loader=jinja2.FileSystemLoader("."),
                   autoescape=select_autoescape())
@@ -29,7 +30,7 @@ def edit_post(post_id, mal_id, title, status, template):
     template = env.get_template(template)
 
     if mal_id:
-        pass
+        context["mal"] = mal.fetch(mal_id)
 
     html_content = template.render(context)
 
@@ -40,7 +41,7 @@ def edit_post(post_id, mal_id, title, status, template):
                              'status': status,
                              'content': html_content,
                          },
-                         headers={'Authorization': f"Basic {AUTH_BASIC}"})
+                         headers=headers)
     entry = resp.json()
     print(f"{entry['id']} {entry['status']} | {entry['title']['rendered']}"
           f"{entry['link']}")
