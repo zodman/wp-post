@@ -1,9 +1,12 @@
-<!-- args: {% for k,v in _args.items() %} {{k}}="{{v|safe}}" {%endfor%} -->
+{% if mal %}
+<!--
+    {{mal|pprint|safe}}
+-->
 <h1>
 Anime title: {{mal.title}}
 </h1>
-{% if mal.images  %}
-
+{% endif %}
+{% if mal and mal.images  %}
     <img src="{{mal.images.jpg.image_url or '' }}">
 {% endif %}
 {#

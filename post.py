@@ -4,18 +4,34 @@ from rich import print
 from conf import URL_BASE, headers
 import jinja2
 from jinja2 import Environment, select_autoescape
-import re
 from plugins import mal
 from slugify import slugify
-
 
 env = Environment(loader=jinja2.FileSystemLoader("."),
                   autoescape=select_autoescape())
 
 
 def _render(entry):
-    print(f"{entry['id']} {entry['status']} | {entry['title']['rendered']} "
-          f"{entry['link']}")
+    print(f"{entry['id']} {entry['status']} | {entry['title']['rendered']} | "
+          f"{entry['link']} cats:{entry['categories']} tags: {entry['tags']}")
+
+
+def _create_data(**kwargs):
+    data = {
+        'slug': kwargs.get("slug"),
+        'status': kwargs.get("status"),
+        'content': kwargs.get('content'),
+    }
+    title = kwargs.get('title')
+    if title:
+        data['title'] = title
+    category = kwargs.get('category')
+    if category:
+        data['categories'] = category
+    tag = kwargs.get('category')
+    if tag:
+        data['tags'] = tag
+    return data
 
 
 @click.group()
@@ -24,56 +40,49 @@ def post():
 
 
 @post.command()
-def list():
-    url = f"{URL_BASE}wp/v2/posts"
-    resp = requests.get(url, headers=headers)
-    data = resp.json()
-    for entry in data:
-        print(f"{entry['id']} {entry['status']} | {entry['title']['rendered']}"
-              f"{entry['link']}")
-
-        content = entry['content']['rendered']
-        regex_string = '\<\!\-\-\ args\:\ \ (?P<args>.*)\ \ \-\-\>'
-        r = re.search(regex_string, content)
-        if r:
-            print(r.group('args'))
-
-
-@post.command()
-@click.argument('post_id')
-@click.option("--mal-id", required=False, type=int)
-@click.option("--title", required=True, type=str)
-@click.option("--slug",type=str)
 @click.option("--status",
               default='publish',
               type=click.Choice(
                   "publish, future, draft, pending, private".split(", ")))
+def list(status):
+    url = f"{URL_BASE}wp/v2/posts"
+    data = dict(status=status)
+    resp = requests.get(url,params=data, headers=headers)
+    data = resp.json()
+    for entry in data:
+        _render(entry)
+
+
+@post.command()
+@click.argument('post_id')
+@click.option("--mal-id", type=int)
+@click.option("--title", type=str)
+@click.option("--slug", type=str)
+@click.option("--status",
+              default='publish',
+              type=click.Choice(
+                  "publish, future, draft, pending, private".split(", ")))
+@click.option("--category", multiple=True, help="multiple", type=int)
+@click.option("--tag", multiple=True, help='multiple', type=int)
 @click.option("--template", default="index.html")
-def edit(post_id, mal_id, title, slug, status, template):
-    context = {
-        '_args': {
-            '--mal_id': mal_id,
-            '--title': title,
-            '--status': status,
-            '--template': template
-        }
-    }
+def edit(post_id, mal_id, title, slug, status, category, tag, template):
+    context = {}
     template_obj = env.get_template(template)
 
     if mal_id:
         context["mal"] = mal.fetch(mal_id)
 
-    html_content = template_obj.render(context)
+    content = template_obj.render(context)
     url = f"{URL_BASE}wp/v2/posts/{post_id}"
-    slug = slug or slugify(title)
-    resp = requests.post(url,
-                         data={
-                             'title': title,
-                             'slug': slug,
-                             'status': status,
-                             'content': html_content,
-                         },
-                         headers=headers)
+    if not slug and title:
+        slug = slugify(title)
+
+    data = _create_data(title=title,
+                        slug=slug,
+                        category=category,
+                        tag=tag,
+                        content=content)
+    resp = requests.post(url, data=data, headers=headers)
     entry = resp.json()
     _render(entry)
 
@@ -86,28 +95,22 @@ def edit(post_id, mal_id, title, slug, status, template):
               type=click.Choice(
                   "publish, future, draft, pending, private".split(", ")))
 @click.option("--template", default="index.html")
-def create(mal_id, title, status, template):
-    context = {
-        '_args': {
-            '--mal_id': mal_id,
-            '--title': title,
-            '--status': status,
-            '--template': template
-        }
-    }
+@click.option("--category", multiple=True, help="multiple", type=int)
+@click.option("--tag", multiple=True, help='multiple', type=int)
+def create(mal_id, title, status, template, category, tag):
+    context = {}
     template = env.get_template(template)
     if mal_id:
         context["mal"] = mal.fetch(mal_id)
     html_content = template.render(context)
 
     url = f"{URL_BASE}wp/v2/posts"
-    resp = requests.post(url,
-                         data={
-                             'title': title,
-                             'status': status,
-                             'content': html_content,
-                         },
-                         headers=headers)
+    data = _create_data(title=title,
+                        category=category,
+                        tag=tag,
+                        content=html_content)
+
+    resp = requests.post(url, data=data, headers=headers)
     entry = resp.json()
     _render(entry)
 
