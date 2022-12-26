@@ -10,7 +10,5 @@ def fetch(mal_id):
 
     mal_data = resp.json().get("data")
 
-    if not mal_data:
-        click.echo("mal_id not found")
-        return
+    assert mal_data, "mal_id not found"
     return mal_data
