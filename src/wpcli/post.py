@@ -5,11 +5,11 @@ import jinja2
 from jinja2 import Environment, select_autoescape
 from slugify import slugify
 from .conf import URL_BASE, headers
-from .plugins import mal
-
+from .plugins import mal, deepl
 
 env = Environment(loader=jinja2.FileSystemLoader("."),
                   autoescape=select_autoescape())
+env.filters['translate'] = deepl.translate
 
 
 def _render(entry):
@@ -48,7 +48,7 @@ def post():
 def list(status):
     url = f"{URL_BASE}wp/v2/posts"
     data = dict(status=status)
-    resp = requests.get(url,params=data, headers=headers)
+    resp = requests.get(url, params=data, headers=headers)
     data = resp.json()
     for entry in data:
         _render(entry)

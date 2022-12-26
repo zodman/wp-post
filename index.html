@@ -1,14 +1,23 @@
 {% if mal %}
 <!--
-    {{mal|pprint|safe}}
+    {{mal|tojson(indent=2)|safe}}
 -->
 <h1>
 Anime title: {{mal.title}}
 </h1>
+
+<p>
+{{mal.synopsis|translate}}
+</p>
 {% endif %}
 {% if mal and mal.images  %}
-    <img src="{{mal.images.jpg.image_url or '' }}">
+    <img src="{{mal.images.jpg.image_url or '' }}">synopsis
 {% endif %}
+
+
+
+
+
 {#
 Para ver el todo lo disponible  usa:
 #}
