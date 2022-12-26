@@ -16,3 +16,9 @@ source .venv/bin/source
 pip install . # or -e for development
 ```
 
+
+### usage
+
+```
+python -m wpcli
+```
