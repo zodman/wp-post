@@ -5,13 +5,12 @@ import jinja2
 from jinja2 import Environment, select_autoescape
 from slugify import slugify
 from .conf import URL_BASE, headers
-from .plugins import mal, deepl, tmdb, cfimages
+from .plugins import mal, deepl, tmdb
 
 env = Environment(loader=jinja2.FileSystemLoader("."),
                   autoescape=select_autoescape())
 env.filters['translate'] = deepl.translate
 env.filters['retranslate'] = deepl.retranslate
-env.filters['cf_image'] = cfimages.cf_image
 
 
 def _render(entry):

@@ -1,4 +1,8 @@
+
+{# jinja2 https://jinja.palletsprojects.com/en/3.0.x/templates/ #}
 {% if mal %}
+{# ################ mal #}
+{# mal content #}
 <pre>
     {{mal|tojson(indent=2)|safe}}
 </pre>
@@ -6,21 +10,25 @@
 Anime title: {{mal.title}}
 </h1>
 
+{# translate en->es->fr->es #}
 <p>
 {{mal.synopsis|retranslate}}
 </p>
 <p>
-
+{# translate en->es #}
 {{mal.synopsis|translate}}
 </p>
 <p>
 {{mal.synopsis}}
 </p>
-{% endif %}
 {% if mal and mal.images  %}
     <img src="{{mal.images.jpg.image_url or '' }}">synopsis
 {% endif %}
 
+{% endif %}
+
+
+{# ################ tmdb #}
 {% if tmdb_movie %}
 <pre>
     {{tmdb_movie|pprint|safe}}
@@ -28,16 +36,13 @@ Anime title: {{mal.title}}
 {% endif %}
 
 {% if tmdb_tv %}
+
 <pre>
     {{tmdb_tv|pprint|safe}}
 </pre>
 
+{# images of tmdb #}
 <img src="{{''.join(['https://image.tmdb.org/t/p/original/' , tmdb_tv.poster_path])}}"/>
+
 {% endif %}
-
-
-
-{#
-Para ver el todo lo disponible  usa:
-#}
 
