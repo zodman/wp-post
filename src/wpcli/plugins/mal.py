@@ -1,5 +1,4 @@
 import requests
-import click
 
 JIKAN_URL = "https://api.jikan.moe/v4/anime/{0}/full"
 

@@ -1,20 +1,39 @@
 {% if mal %}
-<!--
+<pre>
     {{mal|tojson(indent=2)|safe}}
--->
+</pre>
 <h1>
 Anime title: {{mal.title}}
 </h1>
 
 <p>
+{{mal.synopsis|retranslate}}
+</p>
+<p>
+
 {{mal.synopsis|translate}}
+</p>
+<p>
+{{mal.synopsis}}
 </p>
 {% endif %}
 {% if mal and mal.images  %}
     <img src="{{mal.images.jpg.image_url or '' }}">synopsis
 {% endif %}
 
+{% if tmdb_movie %}
+<pre>
+    {{tmdb_movie|pprint|safe}}
+</pre>
+{% endif %}
 
+{% if tmdb_tv %}
+<pre>
+    {{tmdb_tv|pprint|safe}}
+</pre>
+
+<img src="{{''.join(['https://image.tmdb.org/t/p/original/' , tmdb_tv.poster_path])}}"/>
+{% endif %}
 
 
 
