@@ -1,10 +1,10 @@
 
 {# jinja2 https://jinja.palletsprojects.com/en/3.0.x/templates/ #}
-{% if mal %}
 {# ################ mal #}
 {# mal content #}
 <pre>
-    {{mal|tojson(indent=2)|safe}}
+        {{mal}}
+    {#{mal|tojson(indent=2)|safe}#}
 </pre>
 <h1>
 Anime title: {{mal.title}}
@@ -21,11 +21,8 @@ Anime title: {{mal.title}}
 <p>
 {{mal.synopsis}}
 </p>
-{% if mal and mal.images  %}
     <img src="{{mal.images.jpg.image_url or '' }}">synopsis
-{% endif %}
 
-{% endif %}
 
 
 {# ################ tmdb #}
@@ -45,4 +42,21 @@ Anime title: {{mal.title}}
 <img src="{{''.join(['https://image.tmdb.org/t/p/original/' , tmdb_tv.poster_path])}}"/>
 
 {% endif %}
+
+<script src="https://unpkg.com/@supabase/supabase-js@2" />
+<script>
+
+const $supabase = supabase.createClient('https://rdgjyeqbkmkveujsyweh.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJkZ2p5ZXFia21rdmV1anN5d2VoIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzIxNjgzMDQsImV4cCI6MTk4Nzc0NDMwNH0.u4Koq7Qyvu64UMAi9gRxHq5mFo7cAvRfPPX8uT_ketE')
+
+
+const main = async () =>{
+    const { data, error } = await $supabase
+  .from('wp_lazy_trunk')
+  .select();
+    console.log(data, error);
+
+}
+main().then();
+</script>
+
 

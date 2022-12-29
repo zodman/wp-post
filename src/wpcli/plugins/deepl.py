@@ -11,5 +11,7 @@ def retranslate(value):
 
 
 def translate(value, lang=DEEPL_LANG):
+    if not value or value == '':
+        return value
     r = translator.translate_text(value, target_lang=lang)
     return r.text

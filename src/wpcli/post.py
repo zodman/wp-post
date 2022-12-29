@@ -2,13 +2,13 @@ import click
 import requests
 from rich import print
 import jinja2
-from jinja2 import Environment, select_autoescape
+from jinja2 import Environment, select_autoescape, ChainableUndefined
 from slugify import slugify
 from .conf import URL_BASE, headers
 from .plugins import mal, deepl, tmdb
 
 env = Environment(loader=jinja2.FileSystemLoader("."),
-                  autoescape=select_autoescape())
+                  autoescape=select_autoescape(), undefined=ChainableUndefined)
 env.filters['translate'] = deepl.translate
 env.filters['retranslate'] = deepl.retranslate
 
@@ -110,12 +110,23 @@ def edit(post_id, mal_id, title, slug, status, category, tag, template,
 @click.option("--template", default="index.html")
 @click.option("--category", multiple=True, help="multiple", type=int)
 @click.option("--tag", multiple=True, help='multiple', type=int)
-def create(mal_id, title, status, template, category, tag):
+@click.option("--tmdb-id-movie")
+@click.option("--tmdb-id-tv")
+def create(mal_id, title, status, template, category, tag, tmdb_id_tv,
+           tmdb_id_movie):
     context = {}
     template = env.get_template(template)
+    html_content = template.render(context)
     if mal_id:
         context["mal"] = mal.fetch(mal_id)
-    html_content = template.render(context)
+
+    if tmdb_id_movie:
+        result = tmdb.fetch_movie(tmdb_id_movie)
+        context['tmdb_movie'] = result
+
+    if tmdb_id_tv:
+        result = tmdb.fetch_tv(tmdb_id_tv)
+        context['tmdb_tv'] = result
 
     url = f"{URL_BASE}wp/v2/posts"
     data = _create_data(title=title,
