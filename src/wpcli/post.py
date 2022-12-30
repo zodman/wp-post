@@ -50,7 +50,10 @@ def list(status):
     url = f"{URL_BASE}wp/v2/posts"
     data = dict(status=status)
     resp = requests.get(url, params=data, headers=headers)
+    if not resp.ok:
+        print(resp.json())
     data = resp.json()
+
     for entry in data:
         _render(entry)
 
@@ -97,7 +100,9 @@ def edit(post_id, mal_id, title, slug, status, category, tag, template,
                         content=content)
     resp = requests.post(url, data=data, headers=headers)
     entry = resp.json()
-    _render(entry)
+    if resp.ok:
+        _render(entry)
+    print(entry)
 
 
 @post.command()
@@ -136,6 +141,9 @@ def create(mal_id, title, status, template, category, tag, tmdb_id_tv,
 
     resp = requests.post(url, data=data, headers=headers)
     entry = resp.json()
+    if not resp.ok:
+        print(entry)
+
     _render(entry)
 
 
