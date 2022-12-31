@@ -102,7 +102,8 @@ def edit(post_id, mal_id, title, slug, status, category, tag, template,
     entry = resp.json()
     if resp.ok:
         _render(entry)
-    print(entry)
+    else:
+        print(entry)
 
 
 @post.command()
@@ -120,8 +121,6 @@ def edit(post_id, mal_id, title, slug, status, category, tag, template,
 def create(mal_id, title, status, template, category, tag, tmdb_id_tv,
            tmdb_id_movie):
     context = {}
-    template = env.get_template(template)
-    html_content = template.render(context)
     if mal_id:
         context["mal"] = mal.fetch(mal_id)
 
@@ -133,6 +132,8 @@ def create(mal_id, title, status, template, category, tag, tmdb_id_tv,
         result = tmdb.fetch_tv(tmdb_id_tv)
         context['tmdb_tv'] = result
 
+    template_instance = env.get_template(template)
+    html_content = template_instance.render(context)
     url = f"{URL_BASE}wp/v2/posts"
     data = _create_data(title=title,
                         category=category,
