@@ -1,6 +1,5 @@
 from tmdbv3api import Movie, TV
 
-
 def fetch_tv(value):
     tv = TV()
     return tv.details(value).__dict__

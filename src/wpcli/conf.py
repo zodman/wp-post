@@ -3,6 +3,8 @@ import os
 
 load_dotenv()
 
+os.environ["TMDB_LANGUAGE"] = ""
+
 URL_BASE = os.getenv('WP_URL_BASE')
 AUTH_BASIC = os.getenv('WP_AUTH_BASIC')
 

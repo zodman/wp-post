@@ -8,9 +8,14 @@ from .conf import URL_BASE, headers
 from .plugins import mal, deepl, tmdb
 
 env = Environment(loader=jinja2.FileSystemLoader("."),
-                  autoescape=select_autoescape(), undefined=ChainableUndefined)
+                  autoescape=select_autoescape(),
+                  undefined=ChainableUndefined)
 env.filters['translate'] = deepl.translate
 env.filters['retranslate'] = deepl.retranslate
+env.filters['img'] = lambda x: x.replace('https://', 'https://i0.wp.com/')
+env.filters['tmdb_img'] = lambda x: ''.join([
+    'https://image.tmdb.org/t/p/original/', x
+]).replace('https://', 'https://i0.wp.com/')
 
 
 def _render(entry):

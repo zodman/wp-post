@@ -23,7 +23,7 @@ Anime title: {{mal.title}}
 <p>
 {{mal.synopsis}}
 </p>
-    <img src="{{mal.images.jpg.image_url or '' }}">synopsis
+    <img src="{{mal.images.jpg.image_url|img }}">synopsis
 
 
 
@@ -37,28 +37,11 @@ Anime title: {{mal.title}}
 {% if tmdb_tv %}
 
 <pre>
-    {{tmdb_tv|pprint|safe}}
+tmdb_tv={{tmdb_tv|pprint|safe}}
 </pre>
 
 {# images of tmdb #}
-<img src="{{''.join(['https://image.tmdb.org/t/p/original/' , tmdb_tv.poster_path])}}"/>
+<img src="{{tmdb_tv.backdrop_path|tmdb_img}}"/>
 
 {% endif %}
-
-<script src="https://unpkg.com/@supabase/supabase-js@2" />
-<script>
-
-const $supabase = supabase.createClient('https://rdgjyeqbkmkveujsyweh.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJkZ2p5ZXFia21rdmV1anN5d2VoIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzIxNjgzMDQsImV4cCI6MTk4Nzc0NDMwNH0.u4Koq7Qyvu64UMAi9gRxHq5mFo7cAvRfPPX8uT_ketE')
-
-
-const main = async () =>{
-    const { data, error } = await $supabase
-  .from('wp_lazy_trunk')
-  .select();
-    console.log(data, error);
-
-}
-main().then();
-</script>
-
 
