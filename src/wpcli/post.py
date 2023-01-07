@@ -104,11 +104,11 @@ def edit(post_id, mal_id, title, slug, status, category, tag, template,
                         tag=tag,
                         content=content)
     resp = requests.post(url, data=data, headers=headers)
-    entry = resp.json()
     if resp.ok:
+        entry = resp.json()
         _render(entry)
     else:
-        print(entry)
+        print(resp.text)
 
 
 @post.command()

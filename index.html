@@ -1,47 +1,32 @@
-
 {# jinja2 https://jinja.palletsprojects.com/en/3.0.x/templates/ #}
 {# ################ mal #}
 {# mal content #}
-<!--
-   {% if  mal %}
-   
-mal = {{mal|tojson(indent=2)}}
-   {% endif %}
--->
-<h1>
-Anime title: {{mal.title}}
-</h1>
-
-{# translate en->es->fr->es #}
-<p>
-{{mal.synopsis|retranslate}}
-</p>
-<p>
-{# translate en->es #}
-{{mal.synopsis|translate}}
-</p>
-<p>
-{{mal.synopsis}}
-</p>
-    <img src="{{mal.images.jpg.image_url|img }}">synopsis
-
-
-
+{% if  mal %}
+    <pre>   
+mal = {{mal|pprint}}
+</pre>
+    <h1>Anime title: {{ mal.title }}</h1>
+    {# translate en->es->fr->es #}
+    <p>{{ mal.synopsis|retranslate }}</p>
+    <p>
+        {# translate en->es #}
+        {{ mal.synopsis|translate }}
+    </p>
+    <p>{{ mal.synopsis }}</p>
+    <img src="{{ mal.images.jpg.image_url|img }}">
+    synopsis
+{% endif %}
 {# ################ tmdb #}
 {% if tmdb_movie %}
-<pre>
+    <pre>
     {{tmdb_movie|pprint|safe}}
 </pre>
 {% endif %}
-
 {% if tmdb_tv %}
-
-<pre>
+    <pre>
 tmdb_tv={{tmdb_tv|pprint|safe}}
 </pre>
-
-{# images of tmdb #}
-<img src="{{tmdb_tv.backdrop_path|tmdb_img}}"/>
-
+    {# images of tmdb #}
+    <img src="{{ tmdb_tv.backdrop_path|tmdb_img }}"/>
 {% endif %}
-
+[embed][fetch source='streamsb'][/embed]
